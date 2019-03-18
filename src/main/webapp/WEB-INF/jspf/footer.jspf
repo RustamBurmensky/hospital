@@ -1,0 +1,15 @@
+<%--===========================================================================
+Footer (bottom area).
+===========================================================================--%>
+
+<nav id="footer" class="navbar navbar-light bg-light">
+    <div class="container d-flex justify-content-center">
+        <p class="lead text-center">
+            &copy;HospitalCard (Hospital, EPAM Java Training), Rustam Burmensky, 2019<br>
+            <a href="mailto:rustamburmenskii@gmail.com">rustamburmenskii@gmail.com</a>
+        </p>
+    </div>
+</nav>
+
+<script type="text/javascript" src="webjars/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>

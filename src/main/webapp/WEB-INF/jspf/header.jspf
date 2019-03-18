@@ -1,0 +1,112 @@
+<%--===========================================================================
+Header (top area).
+===========================================================================--%>
+
+<%@ page import="com.epam.burmensky.hospital.model.enumeration.Role" %>
+<%@ include file="/WEB-INF/jspf/directive/page.jspf" %>
+<%@ include file="/WEB-INF/jspf/directive/taglib.jspf" %>
+
+<div>
+    <nav id="header" class="navbar navbar-expand-lg navbar-light bg-light">
+
+        <a class="navbar-brand" href="#">HospitalCard</a>
+
+        <c:if test="${not empty user}">
+            <%--===========================================================================
+            This is the user menu.
+            ===========================================================================--%>
+
+            <div id="leftHeader" class="collapse navbar-collapse">
+                <ul class="navbar-nav">
+
+                    <%--===========================================================================
+                    This way we define the ADMIN MENU.
+                    ===========================================================================--%>
+                    <c:if test="${userRole.name == 'admin' }">
+                        <li class="nav-item">
+                            <a class="nav-link" href="controller?command=listUsers">
+                                <fmt:message key="header_jspf.anchor.all_users"/>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="controller?command=listSpecializations">
+                                <fmt:message key="header_jspf.anchor.all_specializations"/>
+                            </a>
+                        </li>
+                    </c:if>
+
+
+                    <%--===========================================================================
+                    This way we define the USER MENU.
+                    ===========================================================================--%>
+                    <c:if test="${not empty userRole}">
+                    <li class="nav-item">
+                        <a class="nav-link" href="controller?command=listPatients">
+                            <fmt:message key="header_jspf.anchor.all_patients"/>
+                        </a>
+                    </li>
+                    </c:if>
+
+                    <%--===========================================================================
+                    This way we define the settings anchor.
+                    ===========================================================================--%>
+                    <li class="nav-item">
+                        <a class="nav-link" href="controller?command=showSettings">
+                            <fmt:message key="header_jspf.anchor.settings"/>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+
+            <%--===========================================================================
+            This way we define the menu located at the right of header.
+            ===========================================================================--%>
+            <div id="rightHeader">
+            <ul class="navbar-nav">
+
+                <span class="navbar-text">
+                <%--===========================================================================
+                Type user name if the user object is presented in the current session.
+                ===========================================================================--%>
+                <c:out value="${user.firstName} ${user.secondName}"/>
+
+                <%--===========================================================================
+                Type user role name if the user object is presented in the current session.
+                ===========================================================================--%>
+                <c:if test="${not empty userRole}">
+                    <c:out value="(${userRole.getLocalizedName(userLang.locale)})"/>
+                </c:if>
+
+                </span>
+
+                <%--===========================================================================
+                Type link to logout
+                ===========================================================================--%>
+                <li class="nav-item">
+                    <a class="nav-link" href="controller?command=logout">
+                        <fmt:message key="header_jspf.anchor.logout"/>
+                    </a>
+                </li>
+
+            </ul>
+        </c:if>
+
+        <c:if test="${empty user and title ne 'Login'}">
+            <ul id="rightHeader" class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="login.jsp">
+                        <fmt:message key="header_jspf.anchor.login"/>
+                    </a>
+                </li>
+            </ul>
+        </c:if>
+
+    </nav>
+    </div>
+
+    </div>
+
+</div>
+
