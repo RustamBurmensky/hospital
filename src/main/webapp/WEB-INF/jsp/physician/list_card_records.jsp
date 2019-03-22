@@ -6,9 +6,7 @@
 
 <html>
 
-<fmt:message key="list_card_records_jsp.title" var="title">
-    <fmt:param value="${patient.secondName} ${patient.firstName}"/>
-</fmt:message>
+<fmt:message key="list_card_records_jsp.title" var="title"/>
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
 
 <body>
@@ -31,6 +29,70 @@ Class page corresponds to the '.page' element in included CSS document.
     <div class="container">
 
     <h1>${title}</h1>
+
+    <ul class="list-unstyled">
+        <li>
+            <fmt:message key="list_card_records_jsp.label.second_name">
+                <fmt:param value="${patient.secondName}"/>
+            </fmt:message>
+        </li>
+        <li>
+            <fmt:message key="list_card_records_jsp.label.first_name">
+                <fmt:param value="${patient.firstName}"/>
+            </fmt:message>
+        </li>
+        <li>
+            <fmt:message key="list_card_records_jsp.label.patronymic">
+                <fmt:param value="${patient.patronymic}"/>
+            </fmt:message>
+        </li>
+        <li>
+            <fmt:message key="list_card_records_jsp.label.birthday">
+                <fmt:formatDate pattern="dd.MM.yyyy" value="${patient.birthday}" var="bd"/>
+                <fmt:param value="${bd}"/>
+            </fmt:message>
+        </li>
+        <li>
+            <fmt:message key="list_card_records_jsp.label.weight">
+                <fmt:param value="${patient.weight}"/>
+            </fmt:message>
+        </li>
+        <li>
+            <fmt:message key="list_card_records_jsp.label.height">
+                <fmt:param value="${patient.height}"/>
+            </fmt:message>
+        </li>
+        <li>
+            <fmt:message key="list_card_records_jsp.label.address">
+                <fmt:param value="${patient.address}"/>
+            </fmt:message>
+        </li>
+        <li>
+            <fmt:message key="list_card_records_jsp.label.occupation">
+                <fmt:param value="${patient.occupation}"/>
+            </fmt:message>
+        </li>
+        <li>
+            <fmt:message key="list_card_records_jsp.label.admissionDate">
+                <fmt:formatDate pattern="dd.MM.yyyy" value="${patient.admissionDate}" var="ad"/>
+                <fmt:param value="${ad}"/>
+            </fmt:message>
+        </li>
+        <li>
+            <fmt:message key="list_card_records_jsp.label.inpatient" var="inpatient"/>
+            <fmt:message key="list_card_records_jsp.label.outpatient" var="outpatient"/>
+            <fmt:message key="list_card_records_jsp.label.treatment">
+                <c:choose>
+                    <c:when test="${patient.inpatient}">
+                        <fmt:param value="${inpatient}"/>
+                    </c:when>
+                    <c:otherwise>
+                        <fmt:param value="${outpatient}"/>
+                    </c:otherwise>
+                </c:choose>
+            </fmt:message>
+        </li>
+    </ul>
 
     <%--===========================================================================
     This is the CONTENT, containing the main part of the page.
@@ -118,8 +180,9 @@ Class page corresponds to the '.page' element in included CSS document.
 
     <a class="btn btn-outline-primary" href="controller?command=addEditCardRecordGet&patientId=${patient.id}"><fmt:message key="list_card_records_jsp.button.add"/></a>
 
-    <%@ include file="/WEB-INF/jspf/footer.jspf"%>
-
 </div>
+
+<%@ include file="/WEB-INF/jspf/footer.jspf"%>
+
 </body>
 </html>

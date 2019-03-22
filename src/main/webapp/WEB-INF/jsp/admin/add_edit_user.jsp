@@ -38,8 +38,6 @@ Just included it in this JSP document.
 
     <h1>${title}</h1>
 
-    <div class="row">
-
         <%-- CONTENT --%>
 
         <form id="add_edit_user_form" action="controller" method="post">
@@ -69,7 +67,7 @@ Just included it in this JSP document.
                 </div>
 
                 <div class="form-group">
-                    <label for="secondName_${Language.getLanguage(record.langId).getLangName()}}">
+                    <label for="secondName_${Language.getLanguage(record.langId).getLangName()}">
                         <fmt:message key="add_edit_user_jsp.label.second_name">
                             <fmt:param value="${Language.getLanguage(record.langId).getLocalizedName(userLang.locale)}"/>
                         </fmt:message>
@@ -161,10 +159,10 @@ Just included it in this JSP document.
         </form>
 
         <%-- CONTENT --%>
-    </div>
-
-    <%@ include file="/WEB-INF/jspf/footer.jspf"%>
 
 </div>
+
+<%@ include file="/WEB-INF/jspf/footer.jspf"%>
+
 </body>
 </html>

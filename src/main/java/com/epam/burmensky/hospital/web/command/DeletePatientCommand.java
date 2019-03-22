@@ -22,7 +22,7 @@ public class DeletePatientCommand extends Command {
     private static final Logger log = Logger.getLogger(DeletePatientCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request,
+    public CommandResult execute(HttpServletRequest request,
                           HttpServletResponse response) throws IOException, ServletException {
         log.debug("Delete Patient Command starts");
 
@@ -41,7 +41,7 @@ public class DeletePatientCommand extends Command {
             errorMessage = "Wrong patient identifier";
             request.setAttribute("errorMessage", errorMessage);
             log.error("errorMessage --> " + errorMessage);
-            return redirect;
+            return new ForwardCommandResult(redirect, request, response);
         }
 
         try {
@@ -51,12 +51,12 @@ public class DeletePatientCommand extends Command {
             errorMessage = "Failed to delete patient";
             request.setAttribute("errorMessage", errorMessage);
             log.error("errorMessage --> " + errorMessage);
-            return redirect;
+            return new ForwardCommandResult(redirect, request, response);
         }
 
         redirect = Path.COMMAND__LIST_PATIENTS;
 
         log.debug("Commands finished");
-        return redirect;
+        return new RedirectCommandResult(redirect, request, response);
     }
 }

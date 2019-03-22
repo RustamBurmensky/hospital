@@ -15,7 +15,7 @@ public class NoCommand extends Command {
     private static final Logger log = Logger.getLogger(NoCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request,
+    public CommandResult execute(HttpServletRequest request,
                           HttpServletResponse response) throws IOException, ServletException {
         log.debug("Command starts");
 
@@ -24,6 +24,6 @@ public class NoCommand extends Command {
         log.error("Set the request attribute: errorMessage --> " + errorMessage);
 
         log.debug("Command finished");
-        return Path.PAGE__ERROR_PAGE;
+        return new ForwardCommandResult(Path.PAGE__ERROR_PAGE, request, response);
     }
 }

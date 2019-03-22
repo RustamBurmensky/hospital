@@ -23,7 +23,7 @@ public class AddAppointmentPostCommand extends Command {
     private static final Logger log = Logger.getLogger(AddAppointmentPostCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request,
+    public CommandResult execute(HttpServletRequest request,
                           HttpServletResponse response) throws IOException, ServletException {
         log.debug("Add Appointment Command starts");
 
@@ -42,7 +42,7 @@ public class AddAppointmentPostCommand extends Command {
             errorMessage = "Wrong user identifier";
             request.setAttribute("errorMessage", errorMessage);
             log.error("errorMessage --> " + errorMessage);
-            return redirect;
+            return new ForwardCommandResult(redirect, request, response);
         }
 
         String patientIdString = request.getParameter("patientId");
@@ -57,7 +57,7 @@ public class AddAppointmentPostCommand extends Command {
             errorMessage = "Wrong patient identifier";
             request.setAttribute("errorMessage", errorMessage);
             log.error("errorMessage --> " + errorMessage);
-            return redirect;
+            return new ForwardCommandResult(redirect, request, response);
         }
 
         Appointment appointment = new Appointment();
@@ -69,6 +69,6 @@ public class AddAppointmentPostCommand extends Command {
         redirect = Path.COMMAND__LIST_APPOINTMENTS + patientId;
 
         log.debug("Commands finished");
-        return redirect;
+        return new RedirectCommandResult(redirect, request, response);
     }
 }

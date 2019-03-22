@@ -26,7 +26,7 @@ public class AddEditSpecializationPostCommand extends Command {
     private static final Logger log = Logger.getLogger(AddEditSpecializationPostCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request,
+    public CommandResult execute(HttpServletRequest request,
                           HttpServletResponse response) throws IOException, ServletException {
         log.debug("Add/Edit Specialization Command starts");
 
@@ -46,7 +46,7 @@ public class AddEditSpecializationPostCommand extends Command {
                 errorMessage = "Wrong specialization identifier";
                 request.setAttribute("errorMessage", errorMessage);
                 log.error("errorMessage --> " + errorMessage);
-                return redirect;
+                return new ForwardCommandResult(redirect, request, response);
             }
             log.trace("Patient identifier found. Edit Specialization Command starts");
         }
@@ -84,6 +84,6 @@ public class AddEditSpecializationPostCommand extends Command {
         redirect = Path.COMMAND__LIST_SPECIALIZATIONS;
 
         log.debug("Commands finished");
-        return redirect;
+        return new RedirectCommandResult(redirect, request, response);
     }
 }

@@ -40,25 +40,12 @@ public class AppointmentDao {
                     " AND users_description.lang_id = specializations_description.lang_id" +
                     " ORDER BY users_description.second_name, users_description.first_name, users_description.patronymic";
 
-    private static final String SQL__FIND_PHYSICIAN_APPOINTMENTS =
-            "SELECT appointments.patient_id, patients_description.first_name, patients_description.second_name," +
-                    " patients_description.patronymic, patients.birthday" +
-                    " FROM (appointments INNER JOIN patients ON" +
-                    " appointments.patient_id = patients.id)" +
-                    " INNER JOIN patients_description ON patients_description.patient_id = patients.id" +
-                    " WHERE appointments.user_id=? AND patients_description.lang_id=?" +
-                    " ORDER BY patients_description.second_name, patients_description.first_name," +
-                    " patients_description.patronymic LIMIT ? OFFSET ?";
-
     private static final String SQL__FIND_APPOINTMENT =
             "SELECT appointments.user_id, appointments.patient_id FROM appointments" +
                     " WHERE user_id=? AND patient_id=?";
 
     private static final String SQL__APPOINTED_USERS_COUNT =
             "SELECT COUNT(user_id) AS user_number FROM appointments WHERE patient_id=?";
-
-    private static final String SQL__APPOINTED_PATIENTS_COUNT =
-            "SELECT COUNT(patient_id) AS patient_number FROM appointments WHERE user_id=?";
 
     private static final String SQL_INSERT_APPOINTMENT =
             "INSERT INTO appointments (user_id, patient_id) VALUES (?,?)";
@@ -90,13 +77,11 @@ public class AppointmentDao {
             result = rs.next();
             rs.close();
             pstmt.close();
-        }
-        catch (SQLException ex) {
+
+            DBConnectionManager.getInstance().commitAndClose(con);
+        } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return result;
     }
@@ -132,13 +117,11 @@ public class AppointmentDao {
             }
             rs.close();
             pstmt.close();
-        }
-        catch (SQLException ex) {
+
+            DBConnectionManager.getInstance().commitAndClose(con);
+        } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return users;
     }
@@ -169,65 +152,15 @@ public class AppointmentDao {
             }
             rs.close();
             pstmt.close();
-        }
-        catch (SQLException ex) {
+
+            DBConnectionManager.getInstance().commitAndClose(con);
+        } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return users;
     }
 
-    /**
-     * Returns a list of patients who are appointed to the user on the given page.
-     *
-     * @param page
-     *            page number.
-     * @param userId
-     *            user identifier.
-     * @param lang
-     *            user language.
-     * @return list of Discharge entities.
-     */
-    public List<PatientAppointmentBean> findAppointedPatients(Integer page, Integer userId, Language lang) {
-        List<PatientAppointmentBean> discharges = new ArrayList<>();
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        Connection con = null;
-        try {
-            con = DBConnectionManager.getInstance().getConnection();
-            PatientAppointmentMapper mapper = new PatientAppointmentMapper();
-            pstmt = con.prepareStatement(SQL__FIND_PHYSICIAN_APPOINTMENTS);
-            pstmt.setInt(1, userId);
-            pstmt.setByte(2, lang.getLangId());
-            pstmt.setInt(3, ELEMENTS_ON_PAGE);
-            pstmt.setInt(4, page * ELEMENTS_ON_PAGE);
-            rs = pstmt.executeQuery();
-            while (rs.next()) {
-                discharges.add(mapper.mapRow(rs));
-            }
-            rs.close();
-            pstmt.close();
-        }
-        catch (SQLException ex) {
-            DBConnectionManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
-        }
-        return discharges;
-    }
-
-    /**
-     * Returns the number of pages of appointed users.
-     *
-     * @param patientId
-     *            patient identifier.
-     * @return number of pages.
-     */
     public long appointedUsersPageCount(Integer patientId) {
         Long usersCount = 0L;
         PreparedStatement pstmt = null;
@@ -243,48 +176,13 @@ public class AppointmentDao {
             }
             rs.close();
             pstmt.close();
-        }
-        catch (SQLException ex) {
+
+            DBConnectionManager.getInstance().commitAndClose(con);
+        } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return (long) Math.ceil(usersCount.doubleValue() / ELEMENTS_ON_PAGE);
-    }
-
-    /**
-     * Returns the number of pages of appointed patients.
-     *
-     * @param userId
-     *            user identifier.
-     * @return number of pages.
-     */
-    public long appointedPatientsPageCount(Integer userId) {
-        Long patientsCount = 0L;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        Connection con = null;
-        try {
-            con = DBConnectionManager.getInstance().getConnection();
-            pstmt = con.prepareStatement(SQL__APPOINTED_PATIENTS_COUNT);
-            pstmt.setInt(1, userId);
-            rs = pstmt.executeQuery();
-            if (rs.next()) {
-                patientsCount = rs.getLong("patients_number");
-            }
-            rs.close();
-            pstmt.close();
-        }
-        catch (SQLException ex) {
-            DBConnectionManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
-        }
-        return (long) Math.ceil(patientsCount.doubleValue() / ELEMENTS_ON_PAGE);
     }
 
     /**
@@ -298,11 +196,10 @@ public class AppointmentDao {
         try {
             con = DBConnectionManager.getInstance().getConnection();
             insertAppointment(con, appointment);
+            DBConnectionManager.getInstance().commitAndClose(con);
         } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        } finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
     }
 
@@ -319,11 +216,10 @@ public class AppointmentDao {
         try {
             con = DBConnectionManager.getInstance().getConnection();
             deleteAppointment(con, userId, patientId);
+            DBConnectionManager.getInstance().commitAndClose(con);
         } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        } finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
     }
 
@@ -378,27 +274,6 @@ public class AppointmentDao {
                 bean.setFirstName(resultSet.getString(DBFields.USER_APPOINTMENT__FIRST_NAME));
                 bean.setSecondName(resultSet.getString(DBFields.USER_APPOINTMENT__SECOND_NAME));
                 bean.setPatronymic(resultSet.getString(DBFields.USER_APPOINTMENT__PATRONYMIC));
-                return bean;
-            }
-            catch (SQLException ex) {
-                throw new IllegalStateException(ex);
-            }
-        }
-    }
-
-    /**
-     * Extracts an patient appointment bean from the result set row.
-     */
-    private static class PatientAppointmentMapper implements EntityMapper<PatientAppointmentBean> {
-
-        public PatientAppointmentBean mapRow(ResultSet resultSet) {
-            try {
-                PatientAppointmentBean bean = new PatientAppointmentBean();
-                bean.setId(resultSet.getInt(DBFields.PATIENT_APPOINTMENT__PATIENT_ID));
-                bean.setFirstName(resultSet.getString(DBFields.PATIENT_APPOINTMENT__FIRST_NAME));
-                bean.setSecondName(resultSet.getString(DBFields.PATIENT_APPOINTMENT__SECOND_NAME));
-                bean.setPatronymic(resultSet.getString(DBFields.PATIENT_APPOINTMENT__PATRONYMIC));
-                bean.setBirthday(resultSet.getDate(DBFields.PATIENT_APPOINTMENT__BIRTHDAY));
                 return bean;
             }
             catch (SQLException ex) {

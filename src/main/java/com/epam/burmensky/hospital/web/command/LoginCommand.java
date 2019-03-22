@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.jstl.core.Config;
 import java.io.IOException;
-import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Login command.
@@ -29,11 +29,13 @@ public class LoginCommand extends Command {
     private static final Logger log = Logger.getLogger(LoginCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request,
+    public CommandResult execute(HttpServletRequest request,
                           HttpServletResponse response) throws IOException, ServletException {
         log.debug("Login Command starts");
 
         HttpSession session = request.getSession();
+        ResourceBundle resourceBundle = ResourceBundle.getBundle(Path.RESOURCE_BUNDLE,
+                request.getLocale());
 
         // obtain login and password from the request
         String login = request.getParameter("login");
@@ -46,20 +48,20 @@ public class LoginCommand extends Command {
         String redirect = Path.PAGE__LOGIN;
 
         if (login == null || password == null || login.isEmpty() || password.isEmpty()) {
-            errorMessage = "Login/password cannot be empty";
+            errorMessage = resourceBundle.getString("login_jsp.error.empty_login_or_password");
             request.setAttribute("errorMessage", errorMessage);
             log.error("errorMessage --> " + errorMessage);
-            return redirect;
+            return new ForwardCommandResult(redirect, request, response);
         }
 
         User user = new UserDao().findUserByLogin(login);
         log.trace("Found in DB: user --> " + user);
 
         if (user == null || !password.equals(user.getPassword())) {
-            errorMessage = "Cannot find user with such login/password";
+            errorMessage = resourceBundle.getString("login_jsp.error.wrong_login_or_password");
             request.setAttribute("errorMessage", errorMessage);
             log.error("errorMessage --> " + errorMessage);
-            return redirect;
+            return new ForwardCommandResult(redirect, request, response);
         } else {
             Role userRole = Role.getRole(user.getRoleId());
             log.trace("userRole --> " + userRole);
@@ -89,6 +91,6 @@ public class LoginCommand extends Command {
         }
 
         log.debug("Command finished");
-        return redirect;
+        return new RedirectCommandResult(redirect, request, response);
     }
 }

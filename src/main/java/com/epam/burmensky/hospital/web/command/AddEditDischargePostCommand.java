@@ -33,7 +33,7 @@ public class AddEditDischargePostCommand extends Command {
     private static final Logger log = Logger.getLogger(AddEditDischargePostCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request,
+    public CommandResult execute(HttpServletRequest request,
                           HttpServletResponse response) throws IOException, ServletException {
         log.debug("Add/Edit Discharge Command starts");
 
@@ -48,14 +48,14 @@ public class AddEditDischargePostCommand extends Command {
             log.trace("Request parameter: id --> " + dischargeId);
             try {
                 id = Integer.parseInt(dischargeId);
+                log.trace("Discharge identifier found. Edit Discharge Command starts");
             }
             catch (Exception ex) {
                 errorMessage = "Wrong discharge identifier";
                 request.setAttribute("errorMessage", errorMessage);
                 log.error("errorMessage --> " + errorMessage);
-                return redirect;
+                return new ForwardCommandResult(redirect, request, response);
             }
-            log.trace("Discharge identifier found. Edit Discharge Command starts");
         }
         else {
             log.trace("Discharge identifier is not found. Add Discharge Command starts");
@@ -73,7 +73,7 @@ public class AddEditDischargePostCommand extends Command {
             errorMessage = "Wrong patient identifier";
             request.setAttribute("errorMessage", errorMessage);
             log.error("errorMessage --> " + errorMessage);
-            return redirect;
+            return new ForwardCommandResult(redirect, request, response);
         }
 
         String dateString = request.getParameter("date");
@@ -90,7 +90,7 @@ public class AddEditDischargePostCommand extends Command {
             errorMessage = "Wrong date format (date)";
             request.setAttribute("errorMessage", errorMessage);
             log.error("errorMessage --> " + errorMessage);
-            return redirect;
+            return new ForwardCommandResult(redirect, request, response);
         }
 
         Map<Language, String> localizedDiagnosis = new HashMap<>();
@@ -125,6 +125,6 @@ public class AddEditDischargePostCommand extends Command {
         redirect = Path.COMMAND__SHOW_DISCHARGE + bean.getPatientId();
 
         log.debug("Commands finished");
-        return redirect;
+        return new RedirectCommandResult(redirect, request, response);
     }
 }

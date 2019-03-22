@@ -2,7 +2,6 @@ package com.epam.burmensky.hospital.web.command;
 
 import com.epam.burmensky.hospital.Path;
 import com.epam.burmensky.hospital.db.HealthCardRecordDao;
-import com.epam.burmensky.hospital.db.PatientDao;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -23,7 +22,7 @@ public class DeleteCardRecordCommand extends Command {
     private static final Logger log = Logger.getLogger(DeleteCardRecordCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request,
+    public CommandResult execute(HttpServletRequest request,
                           HttpServletResponse response) throws IOException, ServletException {
         log.debug("Delete Card Record Command starts");
 
@@ -42,15 +41,12 @@ public class DeleteCardRecordCommand extends Command {
             errorMessage = "Wrong card record identifier";
             request.setAttribute("errorMessage", errorMessage);
             log.error("errorMessage --> " + errorMessage);
-            return redirect;
+            return new ForwardCommandResult(redirect, request, response);
         }
 
         int patientId;
 
         try {
-            /*
-                 TODO: retrieve user identifier without SQL query
-             */
             patientId = new HealthCardRecordDao().findRecordById(id).getPatientId();
             new HealthCardRecordDao().deleteRecord(id);
         }
@@ -58,12 +54,12 @@ public class DeleteCardRecordCommand extends Command {
             errorMessage = "Failed to delete card record";
             request.setAttribute("errorMessage", errorMessage);
             log.error("errorMessage --> " + errorMessage);
-            return redirect;
+            return new ForwardCommandResult(redirect, request, response);
         }
 
         redirect = Path.COMMAND__LIST_CARD_RECORDS + patientId;
 
         log.debug("Commands finished");
-        return redirect;
+        return new RedirectCommandResult(redirect, request, response);
     }
 }

@@ -29,7 +29,7 @@ public class ShowSettingsCommand extends Command {
     private static final Logger log = Logger.getLogger(ShowSettingsCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request,
+    public CommandResult execute(HttpServletRequest request,
                           HttpServletResponse response) throws IOException, ServletException {
         HttpSession session = request.getSession();
 
@@ -47,7 +47,7 @@ public class ShowSettingsCommand extends Command {
         request.setAttribute("specializationBeans", specializationBeans);
 
         log.debug("Commands finished");
-        return Path.PAGE__SETTINGS;
+        return new ForwardCommandResult(Path.PAGE__SETTINGS, request, response);
     }
 
 }

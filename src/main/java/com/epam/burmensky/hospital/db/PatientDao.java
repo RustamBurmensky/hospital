@@ -18,7 +18,8 @@ public class PatientDao {
 
     private static final String SQL__FIND_ALL =
             "SELECT patients.id, patients_description.first_name, patients_description.second_name," +
-                    " patients_description.patronymic, patients.birthday, patients.weight, patients.height" +
+                    " patients_description.patronymic, patients_description.address, patients_description.occupation," +
+                    " patients.birthday, patients.weight, patients.height, patients.admission_date, patients.inpatient" +
                     " FROM patients INNER JOIN patients_description ON patients.id = patients_description.patient_id" +
                     " WHERE patients_description.lang_id=?";
 
@@ -26,24 +27,27 @@ public class PatientDao {
 
     private static final String SQL__FIND_PATIENT_BEAN_BY_ID =
             "SELECT patients.id, patients_description.first_name, patients_description.second_name," +
-                    " patients_description.patronymic, patients.birthday, patients.weight, patients.height" +
+                    " patients_description.patronymic, patients_description.address, patients_description.occupation," +
+                    " patients.birthday, patients.weight, patients.height, patients.admission_date, patients.inpatient" +
                     " FROM patients INNER JOIN patients_description ON patients.id = patients_description.patient_id" +
                     " WHERE patients_description.lang_id=? AND patients.id=?";
 
     private static final String SQL__FIND_PATIENT_BEAN_BY_USER_ID =
             "SELECT patients.id, patients_description.first_name, patients_description.second_name," +
-                    " patients_description.patronymic, patients.birthday, patients.weight, patients.height" +
+                    " patients_description.patronymic, patients_description.address, patients_description.occupation," +
+                    " patients.birthday, patients.weight, patients.height, patients.admission_date, patients.inpatient" +
                     " FROM patients INNER JOIN patients_description ON patients.id = patients_description.patient_id" +
                     " WHERE patient_id IN (SELECT patient_id FROM appointments WHERE user_id=?)" +
                     " AND patients_description.lang_id=?";
 
     private static final String SQL__FIND_PATIENT_BY_ID =
-            "SELECT patients.id, patients.birthday, patients.height, patients.weight" +
+            "SELECT patients.id, patients.birthday, patients.height, patients.weight," +
+                    " patients.admission_date, patients.inpatient" +
                     " FROM patients" +
                     " WHERE patients.id=?";
 
     private static final String SQL__FIND_PATIENT_DETAILS_BY_PATIENT_ID =
-            "SELECT patient_id, lang_id, first_name, second_name, patronymic" +
+            "SELECT patient_id, lang_id, first_name, second_name, patronymic, address, occupation" +
                     " FROM patients_description" +
                     " WHERE patient_id=?";
 
@@ -55,19 +59,21 @@ public class PatientDao {
                     " WHERE id IN (SELECT patient_id FROM appointments WHERE user_id=?)";
 
     private static final String SQL_INSERT_PATIENT =
-            "INSERT INTO patients (birthday, weight, height) VALUES (?, ?, ?)";
+            "INSERT INTO patients (birthday, weight, height, admission_date, inpatient) VALUES (?,?,?,?,?)";
 
     private static final String SQL_UPDATE_PATIENT =
-            "UPDATE patients SET birthday=?, weight=?, height=? WHERE id=?";
+            "UPDATE patients SET birthday=?, weight=?, height=?, admission_date=?, inpatient=? WHERE id=?";
 
     private static final String SQL_DELETE_PATIENT =
             "DELETE FROM patients WHERE id=?";
 
     private static final String SQL_INSERT_PATIENT_DETAILS =
-            "INSERT INTO patients_description (patient_id, lang_id, first_name, second_name, patronymic) VALUES (?,?,?,?,?)";
+            "INSERT INTO patients_description (patient_id, lang_id, first_name, second_name," +
+                    " patronymic, address, occupation) VALUES (?,?,?,?,?,?,?)";
 
     private static final String SQL_UPDATE_PATIENT_DETAILS =
-            "UPDATE patients_description SET first_name=?, second_name=?, patronymic=? WHERE patient_id=? AND lang_id=?";
+            "UPDATE patients_description SET first_name=?, second_name=?, patronymic=?," +
+                    " address=?, occupation=? WHERE patient_id=? AND lang_id=?";
 
     private static final String SQL_DELETE_PATIENT_DETAILS =
             "DELETE FROM patients_description WHERE patient_id=?";
@@ -101,13 +107,11 @@ public class PatientDao {
             }
             rs.close();
             pstmt.close();
-        }
-        catch (SQLException ex) {
+
+            DBConnectionManager.getInstance().commitAndClose(con);
+        } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return patients;
     }
@@ -145,13 +149,12 @@ public class PatientDao {
             }
             rs.close();
             pstmt.close();
+
+            DBConnectionManager.getInstance().commitAndClose(con);
         }
         catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return patients;
     }
@@ -175,13 +178,11 @@ public class PatientDao {
             }
             rs.close();
             pstmt.close();
-        }
-        catch (SQLException ex) {
+
+            DBConnectionManager.getInstance().commitAndClose(con);
+        } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return (long) Math.ceil(patientsCount.doubleValue() / ELEMENTS_ON_PAGE);
     }
@@ -208,13 +209,11 @@ public class PatientDao {
             }
             rs.close();
             pstmt.close();
-        }
-        catch (SQLException ex) {
+
+            DBConnectionManager.getInstance().commitAndClose(con);
+        } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return (long) Math.ceil(patientsCount.doubleValue() / ELEMENTS_ON_PAGE);
     }
@@ -244,13 +243,11 @@ public class PatientDao {
                 patient = mapper.mapRow(rs);
             rs.close();
             pstmt.close();
-        }
-        catch (SQLException ex) {
+
+            DBConnectionManager.getInstance().commitAndClose(con);
+        } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return patient;
     }
@@ -292,13 +289,11 @@ public class PatientDao {
                 pstmtPatientDetails.close();
                 localizedPatientBean = new LocalizedPatientBean(patient, patientDetails);
             }
-        }
-        catch (SQLException ex) {
+
+            DBConnectionManager.getInstance().commitAndClose(con);
+        } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return localizedPatientBean;
     }
@@ -314,11 +309,10 @@ public class PatientDao {
         try {
             con = DBConnectionManager.getInstance().getConnection();
             insertPatient(con, patient);
+            DBConnectionManager.getInstance().commitAndClose(con);
         } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        } finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
     }
 
@@ -333,11 +327,10 @@ public class PatientDao {
         try {
             con = DBConnectionManager.getInstance().getConnection();
             updatePatient(con, patient);
+            DBConnectionManager.getInstance().commitAndClose(con);
         } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        } finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
     }
 
@@ -352,11 +345,10 @@ public class PatientDao {
         try {
             con = DBConnectionManager.getInstance().getConnection();
             deletePatient(con, patientId);
+            DBConnectionManager.getInstance().commitAndClose(con);
         } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        } finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
     }
 
@@ -376,7 +368,9 @@ public class PatientDao {
         int k = 1;
         pstmt.setDate(k++, new java.sql.Date(patient.getBirthday().getTime()));
         pstmt.setShort(k++, patient.getWeight());
-        pstmt.setShort(k, patient.getHeight());
+        pstmt.setShort(k++, patient.getHeight());
+        pstmt.setDate(k++, new java.sql.Date(patient.getAdmissionDate().getTime()));
+        pstmt.setBoolean(k, patient.isInpatient());
         pstmt.executeUpdate();
 
         try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
@@ -397,6 +391,8 @@ public class PatientDao {
             preparedStatement.setString(3, details.getFirstName());
             preparedStatement.setString(4, details.getSecondName());
             preparedStatement.setString(5, details.getPatronymic());
+            preparedStatement.setString(6, details.getAddress());
+            preparedStatement.setString(7, details.getOccupation());
             preparedStatement.addBatch();
         }
         preparedStatement.executeBatch();
@@ -416,6 +412,8 @@ public class PatientDao {
         pstmt.setDate(k++, new java.sql.Date(patient.getBirthday().getTime()));
         pstmt.setShort(k++, patient.getWeight());
         pstmt.setShort(k++, patient.getHeight());
+        pstmt.setDate(k++, new java.sql.Date(patient.getAdmissionDate().getTime()));
+        pstmt.setBoolean(k++, patient.isInpatient());
         pstmt.setInt(k, patient.getId());
         pstmt.executeUpdate();
         pstmt.close();
@@ -424,8 +422,10 @@ public class PatientDao {
             pstmtDetails.setString(1, details.getFirstName());
             pstmtDetails.setString(2, details.getSecondName());
             pstmtDetails.setString(3, details.getPatronymic());
-            pstmtDetails.setInt(4, details.getPatientId());
-            pstmtDetails.setByte(5, details.getLangId());
+            pstmtDetails.setString(4, details.getAddress());
+            pstmtDetails.setString(5, details.getOccupation());
+            pstmtDetails.setInt(6, details.getPatientId());
+            pstmtDetails.setByte(7, details.getLangId());
             pstmtDetails.addBatch();
         }
         pstmtDetails.executeBatch();
@@ -463,9 +463,13 @@ public class PatientDao {
                 bean.setFirstName(resultSet.getString(DBFields.DETAILED_PATIENT_BEAN__FIRST_NAME));
                 bean.setSecondName(resultSet.getString(DBFields.DETAILED_PATIENT_BEAN__SECOND_NAME));
                 bean.setPatronymic(resultSet.getString(DBFields.DETAILED_PATIENT_BEAN__PATRONYMIC));
+                bean.setAddress(resultSet.getString(DBFields.DETAILED_PATIENT_BEAN__ADDRESS));
+                bean.setOccupation(resultSet.getString(DBFields.DETAILED_PATIENT_BEAN__OCCUPATION));
                 bean.setBirthday(resultSet.getDate(DBFields.DETAILED_PATIENT_BEAN__BIRTHDAY));
                 bean.setWeight(resultSet.getShort(DBFields.DETAILED_PATIENT_BEAN__WEIGHT));
                 bean.setHeight(resultSet.getShort(DBFields.DETAILED_PATIENT_BEAN__HEIGHT));
+                bean.setAdmissionDate(resultSet.getDate(DBFields.DETAILED_PATIENT_BEAN__ADMISSION_DATE));
+                bean.setInpatient(resultSet.getBoolean(DBFields.DETAILED_PATIENT_BEAN__INPATIENT));
                 return bean;
             }
             catch (SQLException ex) {
@@ -486,6 +490,8 @@ public class PatientDao {
                 patient.setBirthday(resultSet.getDate(DBFields.PATIENT__BIRTHDAY));
                 patient.setWeight(resultSet.getShort(DBFields.PATIENT__WEIGHT));
                 patient.setHeight(resultSet.getShort(DBFields.PATIENT__HEIGHT));
+                patient.setAdmissionDate(resultSet.getDate(DBFields.PATIENT__ADMISSION_DATE));
+                patient.setInpatient(resultSet.getBoolean(DBFields.PATIENT__INPATIENT));
                 return patient;
             }
             catch (SQLException ex) {
@@ -507,6 +513,8 @@ public class PatientDao {
                 patientDetails.setFirstName(resultSet.getString(DBFields.PATIENT_DETAILS__FIRST_NAME));
                 patientDetails.setSecondName(resultSet.getString(DBFields.PATIENT_DETAILS__SECOND_NAME));
                 patientDetails.setPatronymic(resultSet.getString(DBFields.PATIENT_DETAILS__PATRONYMIC));
+                patientDetails.setAddress(resultSet.getString(DBFields.PATIENT_DETAILS__ADDRESS));
+                patientDetails.setOccupation(resultSet.getString(DBFields.PATIENT_DETAILS__OCCUPATION));
                 return patientDetails;
             }
             catch (SQLException ex) {

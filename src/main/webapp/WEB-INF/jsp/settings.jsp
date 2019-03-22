@@ -31,8 +31,6 @@ Just included it in this JSP document.
 
     <h1>${title}</h1>
 
-    <div class="row">
-
         <%-- CONTENT --%>
 
         <form id="update_settings_form" action="controller" method="post">
@@ -134,10 +132,10 @@ Just included it in this JSP document.
         </form>
 
         <%-- CONTENT --%>
-    </div>
-
-    <%@ include file="/WEB-INF/jspf/footer.jspf"%>
 
 </div>
+
+<%@ include file="/WEB-INF/jspf/footer.jspf"%>
+
 </body>
 </html>

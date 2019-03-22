@@ -148,8 +148,9 @@ Class page corresponds to the '.page' element in included CSS document.
 
     <a class="btn btn-outline-primary" href="controller?command=addEditPatientGet"><fmt:message key="list_patients_jsp.button.add"/></a>
 
-    <%@ include file="/WEB-INF/jspf/footer.jspf"%>
-
 </div>
+
+<%@ include file="/WEB-INF/jspf/footer.jspf"%>
+
 </body>
 </html>

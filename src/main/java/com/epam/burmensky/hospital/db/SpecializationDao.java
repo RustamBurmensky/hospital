@@ -78,13 +78,11 @@ public class SpecializationDao {
             }
             rs.close();
             pstmt.close();
-        }
-        catch (SQLException ex) {
+
+            DBConnectionManager.getInstance().commitAndClose(con);
+        } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return specializations;
     }
@@ -116,13 +114,11 @@ public class SpecializationDao {
             }
             rs.close();
             pstmt.close();
-        }
-        catch (SQLException ex) {
+
+            DBConnectionManager.getInstance().commitAndClose(con);
+        } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return specializations;
     }
@@ -146,13 +142,11 @@ public class SpecializationDao {
             }
             rs.close();
             pstmt.close();
-        }
-        catch (SQLException ex) {
+
+            DBConnectionManager.getInstance().commitAndClose(con);
+        } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return (long) Math.ceil(specializationCount.doubleValue() / ELEMENTS_ON_PAGE);
     }
@@ -182,13 +176,11 @@ public class SpecializationDao {
                 specialization = mapper.mapRow(rs);
             rs.close();
             pstmt.close();
-        }
-        catch (SQLException ex) {
+
+            DBConnectionManager.getInstance().commitAndClose(con);
+        } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return specialization;
     }
@@ -219,23 +211,22 @@ public class SpecializationDao {
             rs.close();
             pstmtSpecialization.close();
 
-            SpecializationDetailsMapper detailsMapper = new SpecializationDetailsMapper();
-            pstmtSpecializationDetails = con.prepareStatement(SQL__FIND_SPECIALIZATION_DETAILS_BY_SPECIALIZATION_ID);
-            pstmtSpecializationDetails.setInt(1, id);
-            rs = pstmtSpecializationDetails.executeQuery();
-            while (rs.next())
-                specializationDetails.add(detailsMapper.mapRow(rs));
-            rs.close();
-            pstmtSpecializationDetails.close();
+            if (specialization != null) {
+                SpecializationDetailsMapper detailsMapper = new SpecializationDetailsMapper();
+                pstmtSpecializationDetails = con.prepareStatement(SQL__FIND_SPECIALIZATION_DETAILS_BY_SPECIALIZATION_ID);
+                pstmtSpecializationDetails.setInt(1, id);
+                rs = pstmtSpecializationDetails.executeQuery();
+                while (rs.next())
+                    specializationDetails.add(detailsMapper.mapRow(rs));
+                rs.close();
+                pstmtSpecializationDetails.close();
+                localizedSpecializationBean = new LocalizedSpecializationBean(specialization, specializationDetails);
 
-            localizedSpecializationBean = new LocalizedSpecializationBean(specialization, specializationDetails);
-        }
-        catch (SQLException ex) {
+                DBConnectionManager.getInstance().commitAndClose(con);
+            }
+        } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return localizedSpecializationBean;
     }
@@ -251,11 +242,10 @@ public class SpecializationDao {
         try {
             con = DBConnectionManager.getInstance().getConnection();
             insertSpecialization(con, specialization);
+            DBConnectionManager.getInstance().commitAndClose(con);
         } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        } finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
     }
 
@@ -270,11 +260,10 @@ public class SpecializationDao {
         try {
             con = DBConnectionManager.getInstance().getConnection();
             updateSpecialization(con, specialization);
+            DBConnectionManager.getInstance().commitAndClose(con);
         } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        } finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
     }
 
@@ -289,11 +278,10 @@ public class SpecializationDao {
         try {
             con = DBConnectionManager.getInstance().getConnection();
             deleteSpecialization(con, specializationId);
+            DBConnectionManager.getInstance().commitAndClose(con);
         } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        } finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
     }
 

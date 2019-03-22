@@ -34,4 +34,6 @@ public class Path {
     public static final String COMMAND__SHOW_DISCHARGE = "/controller?command=showDischarge&patientId=";
     public static final String COMMAND__SHOW_SETTINGS = "/controller?command=showSettings";
 
+    public static final String RESOURCE_BUNDLE = "resources";
+
 }

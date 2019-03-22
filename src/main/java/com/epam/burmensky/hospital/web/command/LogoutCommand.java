@@ -22,7 +22,7 @@ public class LogoutCommand extends Command {
     private static final Logger log = Logger.getLogger(LogoutCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request,
+    public CommandResult execute(HttpServletRequest request,
                           HttpServletResponse response) throws IOException, ServletException {
         log.debug("Logout Command starts");
 
@@ -31,6 +31,6 @@ public class LogoutCommand extends Command {
             session.invalidate();
 
         log.debug("Command finished");
-        return Path.PAGE__LOGIN;
+        return new RedirectCommandResult(Path.PAGE__LOGIN, request, response);
     }
 }

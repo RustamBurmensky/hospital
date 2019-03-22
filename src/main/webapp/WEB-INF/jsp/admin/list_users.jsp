@@ -91,7 +91,7 @@ Class page corresponds to the '.page' element in included CSS document.
                                 <td>${bean.specializationName}</td>
                                 <td>${bean.patientsNumber}</td>
                                 <td>
-                                    <a class="btn btn-outline-primary" href="controller?command=addEditUserGet&id=${bean.id}">
+                                    <a class="btn btn-outline-primary" href="controller?command=addEditUserGet&id=${bean.id}"/>
                                         <i class="material-icons">edit</i>
                                     </a>
                                 </td>
@@ -122,8 +122,9 @@ Class page corresponds to the '.page' element in included CSS document.
 
     <a class="btn btn-outline-primary" href="controller?command=addEditUserGet"><fmt:message key="list_users_jsp.button.add"/></a>
 
-    <%@ include file="/WEB-INF/jspf/footer.jspf"%>
-
 </div>
+
+<%@ include file="/WEB-INF/jspf/footer.jspf"%>
+
 </body>
 </html>

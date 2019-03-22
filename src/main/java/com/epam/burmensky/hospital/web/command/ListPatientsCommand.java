@@ -30,7 +30,7 @@ public class ListPatientsCommand extends Command {
     private static final Logger log = Logger.getLogger(ListPatientsCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request,
+    public CommandResult execute(HttpServletRequest request,
                           HttpServletResponse response) throws IOException, ServletException {
         log.debug("List Patients Command starts");
 
@@ -69,6 +69,6 @@ public class ListPatientsCommand extends Command {
         log.trace("Set the request attribute: patientBeanList --> " + patientBeanList);
 
         log.debug("Commands finished");
-        return Path.PAGE__LIST_PATIENTS;
+        return new ForwardCommandResult(Path.PAGE__LIST_PATIENTS, request, response);
     }
 }

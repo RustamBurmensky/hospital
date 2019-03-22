@@ -20,7 +20,7 @@ public abstract class Command implements Serializable {
      * Execution method for command.
      * @return Address to go once the command is executed.
      */
-    public abstract String execute(HttpServletRequest request, HttpServletResponse response)
+    public abstract CommandResult execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException;
 
     @Override

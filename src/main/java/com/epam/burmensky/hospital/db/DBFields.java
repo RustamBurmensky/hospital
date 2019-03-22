@@ -29,12 +29,16 @@ public final class DBFields {
     public static final String PATIENT__BIRTHDAY = "birthday";
     public static final String PATIENT__WEIGHT = "weight";
     public static final String PATIENT__HEIGHT = "height";
+    public static final String PATIENT__ADMISSION_DATE = "admission_date";
+    public static final String PATIENT__INPATIENT = "inpatient";
     //PatientDetails
     public static final String PATIENT_DETAILS__PATIENT_ID = "patient_id";
     public static final String PATIENT_DETAILS__LANG_ID = "lang_id";
     public static final String PATIENT_DETAILS__FIRST_NAME = "first_name";
     public static final String PATIENT_DETAILS__SECOND_NAME = "second_name";
     public static final String PATIENT_DETAILS__PATRONYMIC = "patronymic";
+    public static final String PATIENT_DETAILS__ADDRESS = "address";
+    public static final String PATIENT_DETAILS__OCCUPATION = "occupation";
 
     //Appointment
     public static final String APPOINTMENT__USER_ID = "user_id";
@@ -85,6 +89,10 @@ public final class DBFields {
     public static final String DETAILED_PATIENT_BEAN__BIRTHDAY = "birthday";
     public static final String DETAILED_PATIENT_BEAN__WEIGHT = "weight";
     public static final String DETAILED_PATIENT_BEAN__HEIGHT = "height";
+    public static final String DETAILED_PATIENT_BEAN__ADDRESS = "address";
+    public static final String DETAILED_PATIENT_BEAN__OCCUPATION = "occupation";
+    public static final String DETAILED_PATIENT_BEAN__ADMISSION_DATE = "admission_date";
+    public static final String DETAILED_PATIENT_BEAN__INPATIENT = "inpatient";
 
     //DetailedSpecializationBean
     public static final String DETAILED_SPECIALIZATION_BEAN__NAME = "name";

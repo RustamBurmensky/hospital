@@ -134,13 +134,11 @@ public class HealthCardRecordDao {
                 records.add(mapper.mapRow(rs));
             rs.close();
             pstmt.close();
-        }
-        catch (SQLException ex) {
+
+            DBConnectionManager.getInstance().commitAndClose(con);
+        } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return records;
     }
@@ -177,11 +175,11 @@ public class HealthCardRecordDao {
                 records.add(mapper.mapRow(rs));
             rs.close();
             pstmt.close();
+
+            DBConnectionManager.getInstance().commitAndClose(con);
         } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        } finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return records;
     }
@@ -208,13 +206,11 @@ public class HealthCardRecordDao {
             }
             rs.close();
             pstmt.close();
-        }
-        catch (SQLException ex) {
+
+            DBConnectionManager.getInstance().commitAndClose(con);
+        } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return (long) Math.ceil(usersCount.doubleValue() / ELEMENTS_ON_PAGE);
     }
@@ -244,13 +240,11 @@ public class HealthCardRecordDao {
                 record = mapper.mapRow(rs);
             rs.close();
             pstmt.close();
-        }
-        catch (SQLException ex) {
+
+            DBConnectionManager.getInstance().commitAndClose(con);
+        } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return record;
     }
@@ -281,23 +275,22 @@ public class HealthCardRecordDao {
             rs.close();
             pstmtRecord.close();
 
-            HealthCardRecordDetailsMapper detailsMapper = new HealthCardRecordDetailsMapper();
-            pstmtRecordDetails = con.prepareStatement(SQL__FIND_RECORD_DETAILS_BY_RECORD_ID);
-            pstmtRecordDetails.setInt(1, id);
-            rs = pstmtRecordDetails.executeQuery();
-            while (rs.next())
-                recordDetails.add(detailsMapper.mapRow(rs));
-            rs.close();
-            pstmtRecordDetails.close();
+            if (record != null) {
+                HealthCardRecordDetailsMapper detailsMapper = new HealthCardRecordDetailsMapper();
+                pstmtRecordDetails = con.prepareStatement(SQL__FIND_RECORD_DETAILS_BY_RECORD_ID);
+                pstmtRecordDetails.setInt(1, id);
+                rs = pstmtRecordDetails.executeQuery();
+                while (rs.next())
+                    recordDetails.add(detailsMapper.mapRow(rs));
+                rs.close();
+                pstmtRecordDetails.close();
+                localizedRecordBean = new LocalizedHealthCardRecordBean(record, recordDetails);
+            }
 
-            localizedRecordBean = new LocalizedHealthCardRecordBean(record, recordDetails);
-        }
-        catch (SQLException ex) {
+            DBConnectionManager.getInstance().commitAndClose(con);
+        } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return localizedRecordBean;
     }
@@ -313,11 +306,10 @@ public class HealthCardRecordDao {
         try {
             con = DBConnectionManager.getInstance().getConnection();
             insertRecord(con, record);
+            DBConnectionManager.getInstance().commitAndClose(con);
         } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        } finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
     }
 
@@ -332,11 +324,10 @@ public class HealthCardRecordDao {
         try {
             con = DBConnectionManager.getInstance().getConnection();
             updateRecord(con, record);
+            DBConnectionManager.getInstance().commitAndClose(con);
         } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        } finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
     }
 
@@ -351,11 +342,10 @@ public class HealthCardRecordDao {
         try {
             con = DBConnectionManager.getInstance().getConnection();
             deleteRecord(con, recordId);
+            DBConnectionManager.getInstance().commitAndClose(con);
         } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        } finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
     }
 

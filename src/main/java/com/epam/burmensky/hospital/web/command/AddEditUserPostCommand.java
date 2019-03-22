@@ -30,7 +30,7 @@ public class AddEditUserPostCommand extends Command {
     private static final Logger log = Logger.getLogger(AddEditUserPostCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request,
+    public CommandResult execute(HttpServletRequest request,
                           HttpServletResponse response) throws IOException, ServletException {
         log.debug("Add/Edit User Command starts");
 
@@ -50,7 +50,7 @@ public class AddEditUserPostCommand extends Command {
                 errorMessage = "Wrong user identifier";
                 request.setAttribute("errorMessage", errorMessage);
                 log.error("errorMessage --> " + errorMessage);
-                return redirect;
+                return new ForwardCommandResult(redirect, request, response);
             }
             log.trace("User identifier found. Edit User Command starts");
         }
@@ -71,7 +71,7 @@ public class AddEditUserPostCommand extends Command {
             errorMessage = "Wrong role identifier";
             request.setAttribute("errorMessage", errorMessage);
             log.error("errorMessage --> " + errorMessage);
-            return redirect;
+            return new ForwardCommandResult(redirect, request, response);
         }
 
         String specializationIdString = request.getParameter("specializationId");
@@ -86,7 +86,7 @@ public class AddEditUserPostCommand extends Command {
             errorMessage = "Wrong specialization identifier";
             request.setAttribute("errorMessage", errorMessage);
             log.error("errorMessage --> " + errorMessage);
-            return redirect;
+            return new ForwardCommandResult(redirect, request, response);
         }
 
         String langIdString = request.getParameter("langId");
@@ -101,7 +101,7 @@ public class AddEditUserPostCommand extends Command {
             errorMessage = "Wrong language identifier";
             request.setAttribute("errorMessage", errorMessage);
             log.error("errorMessage --> " + errorMessage);
-            return redirect;
+            return new ForwardCommandResult(redirect, request, response);
         }
 
         String birthdayString = request.getParameter("birthday");
@@ -118,7 +118,7 @@ public class AddEditUserPostCommand extends Command {
             errorMessage = "Wrong date format (birthday)";
             request.setAttribute("errorMessage", errorMessage);
             log.error("errorMessage --> " + errorMessage);
-            return redirect;
+            return new ForwardCommandResult(redirect, request, response);
         }
 
         String login = request.getParameter("login");
@@ -130,7 +130,7 @@ public class AddEditUserPostCommand extends Command {
             errorMessage = "Login/password cannot be empty";
             request.setAttribute("errorMessage", errorMessage);
             log.error("errorMessage --> " + errorMessage);
-            return redirect;
+            return new ForwardCommandResult(redirect, request, response);
         }
 
         Map<Language, String> localizedFirstName = new HashMap<>();
@@ -185,6 +185,6 @@ public class AddEditUserPostCommand extends Command {
         redirect = Path.COMMAND__LIST_USERS;
 
         log.debug("Commands finished");
-        return redirect;
+        return new RedirectCommandResult(redirect, request, response);
     }
 }

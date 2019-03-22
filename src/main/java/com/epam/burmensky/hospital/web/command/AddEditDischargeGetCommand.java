@@ -29,7 +29,7 @@ public class AddEditDischargeGetCommand extends Command {
     private static final Logger log = Logger.getLogger(AddEditDischargeGetCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request,
+    public CommandResult execute(HttpServletRequest request,
                           HttpServletResponse response) throws IOException, ServletException {
         HttpSession session = request.getSession();
 
@@ -50,7 +50,7 @@ public class AddEditDischargeGetCommand extends Command {
                 errorMessage = "Wrong patient identifier";
                 request.setAttribute("errorMessage", errorMessage);
                 log.error("errorMessage --> " + errorMessage);
-                return forward;
+                return new ForwardCommandResult(forward, request, response);
             }
 
             LocalizedDischargeBean dischargeBean = new LocalizedDischargeBean();
@@ -81,6 +81,6 @@ public class AddEditDischargeGetCommand extends Command {
         }
 
         log.debug("Commands finished");
-        return Path.PAGE__ADD_EDIT_DISCHARGE;
+        return new ForwardCommandResult(Path.PAGE__ADD_EDIT_DISCHARGE, request, response);
     }
 }

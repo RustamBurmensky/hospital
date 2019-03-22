@@ -9,3 +9,4 @@
         <fmt:formatDate value="${date}" pattern="dd.MM.yyyy"/>
     </c:otherwise>
 </c:choose>
+

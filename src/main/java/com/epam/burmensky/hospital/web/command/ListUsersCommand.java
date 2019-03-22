@@ -28,7 +28,7 @@ public class ListUsersCommand extends Command {
     private static final Logger log = Logger.getLogger(ListUsersCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request,
+    public CommandResult execute(HttpServletRequest request,
                           HttpServletResponse response) throws IOException, ServletException {
         log.debug("List Users Command starts");
 
@@ -55,6 +55,6 @@ public class ListUsersCommand extends Command {
         log.trace("Set the request attribute: userBeanList --> " + userBeanList);
 
         log.debug("Commands finished");
-        return Path.PAGE__LIST_USERS;
+        return new ForwardCommandResult(Path.PAGE__LIST_USERS, request, response);
     }
 }

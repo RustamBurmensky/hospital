@@ -75,13 +75,11 @@ public class DischargeDao {
             }
             rs.close();
             pstmt.close();
-        }
-        catch (SQLException ex) {
+
+            DBConnectionManager.getInstance().commitAndClose(con);
+        } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return discharge;
     }
@@ -122,14 +120,12 @@ public class DischargeDao {
                 rs.close();
                 pstmtDetails.close();
                 localizedDischargeBean = new LocalizedDischargeBean(discharge, dischargeDetails);
+
+                DBConnectionManager.getInstance().commitAndClose(con);
             }
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return localizedDischargeBean;
     }
@@ -145,11 +141,10 @@ public class DischargeDao {
         try {
             con = DBConnectionManager.getInstance().getConnection();
             insertDischarge(con, discharge);
+            DBConnectionManager.getInstance().commitAndClose(con);
         } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        } finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
     }
 
@@ -164,11 +159,10 @@ public class DischargeDao {
         try {
             con = DBConnectionManager.getInstance().getConnection();
             updateDischarge(con, discharge);
+            DBConnectionManager.getInstance().commitAndClose(con);
         } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        } finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
     }
 
@@ -183,11 +177,10 @@ public class DischargeDao {
         try {
             con = DBConnectionManager.getInstance().getConnection();
             deleteDischarge(con, dischargeId);
+            DBConnectionManager.getInstance().commitAndClose(con);
         } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        } finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
     }
 

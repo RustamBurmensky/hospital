@@ -92,8 +92,9 @@ Class page corresponds to the '.page' element in included CSS document.
             </a>
         </c:if>
 
-    <%@ include file="/WEB-INF/jspf/footer.jspf"%>
-
 </div>
+
+<%@ include file="/WEB-INF/jspf/footer.jspf"%>
+
 </body>
 </html>

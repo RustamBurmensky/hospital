@@ -18,6 +18,10 @@ public class PatientDetails extends DetailsEntity {
 
     private String patronymic;
 
+    private String address;
+
+    private String occupation;
+
     public int getPatientId() {
         return patientId;
     }
@@ -50,10 +54,29 @@ public class PatientDetails extends DetailsEntity {
         this.patronymic = patronymic;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getOccupation() {
+        return occupation;
+    }
+
+    public void setOccupation(String occupation) {
+        this.occupation = occupation;
+    }
+
     @Override
     public String toString() {
         return "PatientDetails [ patientId=" + patientId + ", langId=" + langId +
                 ", firstName=" + firstName + ", secondName=" + secondName +
-                ", patronymic=" + patronymic + " ]";
+                ", patronymic=" + patronymic + ", address=" + address +
+                ", occupation=" + occupation + " ]";
     }
+
+
 }

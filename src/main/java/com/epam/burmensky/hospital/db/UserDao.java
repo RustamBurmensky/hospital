@@ -114,13 +114,11 @@ public class UserDao {
                 users.add(mapper.mapRow(rs));
             rs.close();
             pstmt.close();
-        }
-        catch (SQLException ex) {
+
+            DBConnectionManager.getInstance().commitAndClose(con);
+        } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return users;
     }
@@ -153,11 +151,11 @@ public class UserDao {
                 users.add(mapper.mapRow(rs));
             rs.close();
             pstmt.close();
+
+            DBConnectionManager.getInstance().commitAndClose(con);
         } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        } finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return users;
     }
@@ -181,13 +179,11 @@ public class UserDao {
             }
             rs.close();
             pstmt.close();
-        }
-        catch (SQLException ex) {
+
+            DBConnectionManager.getInstance().commitAndClose(con);
+        } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return (long) Math.ceil(usersCount.doubleValue() / ELEMENTS_ON_PAGE);
     }
@@ -217,13 +213,12 @@ public class UserDao {
                 user = mapper.mapRow(rs);
             rs.close();
             pstmt.close();
+
+            DBConnectionManager.getInstance().commitAndClose(con);
         }
         catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return user;
     }
@@ -266,13 +261,12 @@ public class UserDao {
 
                 localizedUserBean = new LocalizedUserBean(user, userDetails);
             }
+
+            DBConnectionManager.getInstance().commitAndClose(con);
         }
         catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        }
-        finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return localizedUserBean;
     }
@@ -299,11 +293,11 @@ public class UserDao {
                 user = mapper.mapRow(rs);
             rs.close();
             pstmt.close();
+
+            DBConnectionManager.getInstance().commitAndClose(con);
         } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        } finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
         return user;
     }
@@ -319,11 +313,10 @@ public class UserDao {
         try {
             con = DBConnectionManager.getInstance().getConnection();
             insertUser(con, user);
+            DBConnectionManager.getInstance().commitAndClose(con);
         } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        } finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
     }
 
@@ -338,11 +331,10 @@ public class UserDao {
         try {
             con = DBConnectionManager.getInstance().getConnection();
             updateUser(con, user);
+            DBConnectionManager.getInstance().commitAndClose(con);
         } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        } finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
     }
 
@@ -357,11 +349,10 @@ public class UserDao {
         try {
             con = DBConnectionManager.getInstance().getConnection();
             deleteUser(con, userId);
+            DBConnectionManager.getInstance().commitAndClose(con);
         } catch (SQLException ex) {
             DBConnectionManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
-        } finally {
-            DBConnectionManager.getInstance().commitAndClose(con);
         }
     }
 

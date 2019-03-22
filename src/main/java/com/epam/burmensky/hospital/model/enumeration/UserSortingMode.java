@@ -1,5 +1,7 @@
 package com.epam.burmensky.hospital.model.enumeration;
 
+import com.epam.burmensky.hospital.Path;
+
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -11,8 +13,6 @@ public enum UserSortingMode {
     BY_SPECIALIZATION_DESC((byte)4," ORDER BY specializations_description.name DESC"),
     BY_PATIENTS_NUMBER((byte)5, " ORDER BY patients_number"),
     BY_PATIENTS_NUMBER_DESC((byte)6, " ORDER BY patients_number DESC");
-
-    private static final String resourceBundlePath = "resources";
 
     private String sqlOrderBy;
     private byte sortModeId;
@@ -30,7 +30,7 @@ public enum UserSortingMode {
 
     public String getLocalizedName(Locale locale)
     {
-        ResourceBundle bundle = ResourceBundle.getBundle(resourceBundlePath, locale);
+        ResourceBundle bundle = ResourceBundle.getBundle(Path.RESOURCE_BUNDLE, locale);
         return bundle.getString(this.name());
     }
 

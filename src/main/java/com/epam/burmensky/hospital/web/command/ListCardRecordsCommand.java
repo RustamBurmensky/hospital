@@ -28,7 +28,7 @@ public class ListCardRecordsCommand extends Command {
     private static final Logger log = Logger.getLogger(ListCardRecordsCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request,
+    public CommandResult execute(HttpServletRequest request,
                           HttpServletResponse response) throws IOException, ServletException {
         log.debug("List Card Records Command starts");
 
@@ -53,7 +53,7 @@ public class ListCardRecordsCommand extends Command {
             errorMessage = "Wrong patient identifier";
             request.setAttribute("errorMessage", errorMessage);
             log.error("errorMessage --> " + errorMessage);
-            return forward;
+            return new ForwardCommandResult(forward, request, response);
         }
 
         List<DetailedHealthCardRecordBean> recordBeanList =
@@ -73,6 +73,6 @@ public class ListCardRecordsCommand extends Command {
         log.trace("Set the request attribute: recordBeanList --> " + recordBeanList);
 
         log.debug("Commands finished");
-        return Path.PAGE__LIST_CARD_RECORDS;
+        return new ForwardCommandResult(Path.PAGE__LIST_CARD_RECORDS, request, response);
     }
 }

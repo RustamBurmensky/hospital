@@ -22,7 +22,7 @@ public class DeleteAppointmentCommand extends Command {
     private static final Logger log = Logger.getLogger(DeleteAppointmentCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request,
+    public CommandResult execute(HttpServletRequest request,
                           HttpServletResponse response) throws IOException, ServletException {
         log.debug("Delete Appointment Command starts");
 
@@ -41,7 +41,7 @@ public class DeleteAppointmentCommand extends Command {
             errorMessage = "Wrong user identifier";
             request.setAttribute("errorMessage", errorMessage);
             log.error("errorMessage --> " + errorMessage);
-            return redirect;
+            return new ForwardCommandResult(redirect, request, response);
         }
 
         String patientIdString = request.getParameter("patientId");
@@ -56,7 +56,7 @@ public class DeleteAppointmentCommand extends Command {
             errorMessage = "Wrong patient identifier";
             request.setAttribute("errorMessage", errorMessage);
             log.error("errorMessage --> " + errorMessage);
-            return redirect;
+            return new ForwardCommandResult(redirect, request, response);
         }
 
         try {
@@ -66,13 +66,13 @@ public class DeleteAppointmentCommand extends Command {
             errorMessage = "Failed to delete appointment";
             request.setAttribute("errorMessage", errorMessage);
             log.error("errorMessage --> " + errorMessage);
-            return redirect;
+            return new ForwardCommandResult(redirect, request, response);
         }
 
         redirect = Path.COMMAND__LIST_APPOINTMENTS + patientId;
 
         log.debug("Commands finished");
-        return redirect;
+        return new RedirectCommandResult(redirect, request, response);
     }
 
 }

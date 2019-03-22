@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.*;
@@ -43,13 +44,11 @@ public class SecurityFilter implements Filter {
             log.debug("Filter finished");
             chain.doFilter(request, response);
         } else {
-            String errorMessage = "You do not have permission to access the requested resource";
-
-            request.setAttribute("errorMessage", errorMessage);
+            HttpServletResponse httpServletResponse = (HttpServletResponse)response;
+            ResourceBundle resourceBundle = ResourceBundle.getBundle(Path.RESOURCE_BUNDLE);
+            String errorMessage = resourceBundle.getString("error_page_jsp.http_403_forbidden");
             log.trace("Set the request attribute: errorMessage --> " + errorMessage);
-
-            request.getRequestDispatcher(Path.PAGE__ERROR_PAGE)
-                    .forward(request, response);
+            httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, errorMessage);
         }
     }
 

@@ -18,6 +18,10 @@ public class Patient extends Entity {
 
     private short height;
 
+    private Date admissionDate;
+
+    private boolean inpatient;
+
     public Date getBirthday() {
         return birthday;
     }
@@ -42,10 +46,26 @@ public class Patient extends Entity {
         this.height = height;
     }
 
+    public Date getAdmissionDate() {
+        return admissionDate;
+    }
+
+    public void setAdmissionDate(Date admissionDate) {
+        this.admissionDate = admissionDate;
+    }
+
+    public boolean isInpatient() {
+        return inpatient;
+    }
+
+    public void setInpatient(boolean inpatient) {
+        this.inpatient = inpatient;
+    }
+
     @Override
     public String toString() {
         return "Patient [ birthday=" + birthday + ", weight=" + weight +
-                ", height=" + height + " ]";
+                ", height=" + height + ", admissionDate=" + admissionDate +
+                ", inpatient=" + inpatient + " ]";
     }
-
 }

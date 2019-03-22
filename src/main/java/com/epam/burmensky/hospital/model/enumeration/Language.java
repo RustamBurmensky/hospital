@@ -1,5 +1,6 @@
 package com.epam.burmensky.hospital.model.enumeration;
 
+import com.epam.burmensky.hospital.Path;
 import com.epam.burmensky.hospital.model.entity.DetailsEntity;
 
 import java.util.Locale;
@@ -12,8 +13,6 @@ public enum Language {
 
     private byte langId;
     private Locale locale;
-
-    private static final String resourceBundlePath = "resources";
 
     Language(byte langId, Locale locale) {
         this.langId = langId;
@@ -30,7 +29,7 @@ public enum Language {
 
     public String getLocalizedName(Locale locale)
     {
-        ResourceBundle bundle = ResourceBundle.getBundle(resourceBundlePath, locale);
+        ResourceBundle bundle = ResourceBundle.getBundle(Path.RESOURCE_BUNDLE, locale);
         return bundle.getString(this.name());
     }
 

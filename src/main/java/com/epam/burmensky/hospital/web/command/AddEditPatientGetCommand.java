@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,7 +29,7 @@ public class AddEditPatientGetCommand extends Command {
     private static final Logger log = Logger.getLogger(AddEditPatientGetCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request,
+    public CommandResult execute(HttpServletRequest request,
                           HttpServletResponse response) throws IOException, ServletException {
         HttpSession session = request.getSession();
 
@@ -44,6 +45,8 @@ public class AddEditPatientGetCommand extends Command {
                 patientDetailsList.add(patientDetails);
             }
             patientBean.setPatientDetails(patientDetailsList);
+            patientBean.setAdmissionDate(new Date());
+            patientBean.setInpatient(true);
 
             // put user bean to request
             request.setAttribute("patientBean", patientBean);
@@ -61,6 +64,6 @@ public class AddEditPatientGetCommand extends Command {
         }
 
         log.debug("Commands finished");
-        return Path.PAGE__ADD_EDIT_PATIENT;
+        return new ForwardCommandResult(Path.PAGE__ADD_EDIT_PATIENT, request, response);
     }
 }

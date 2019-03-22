@@ -1,5 +1,7 @@
 package com.epam.burmensky.hospital.model.enumeration;
 
+import com.epam.burmensky.hospital.Path;
+
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -9,8 +11,6 @@ public enum RecordType {
     PRESCRIPTION((byte)2),
     PROCEDURE((byte)3),
     SURGERY((byte)4);
-
-    private static final String resourceBundlePath = "resources";
 
     private byte recordTypeId;
 
@@ -22,7 +22,7 @@ public enum RecordType {
 
     public String getLocalizedName(Locale locale)
     {
-        ResourceBundle bundle = ResourceBundle.getBundle(resourceBundlePath, locale);
+        ResourceBundle bundle = ResourceBundle.getBundle(Path.RESOURCE_BUNDLE, locale);
         return bundle.getString(this.name());
     }
 

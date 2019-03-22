@@ -30,14 +30,14 @@ Class page corresponds to the '.page' element in included CSS document.
     This is the CONTENT, containing the main part of the page.
     ===========================================================================--%>
 
-    <div class="row d-flex justify-content-center">
+    <%-- if error occured --%>
+    <c:if test="${not empty errorMessage}">
+        <div class="alert alert-danger d-flex justify-content-center" role="alert">
+            ${errorMessage}
+        </div>
+    </c:if>
 
-        <%-- if get this page using forward --%>
-        <c:if test="${not empty errorMessage}">
-            <div class="alert alert-danger" role="alert">
-                Error message: ${errorMessage}
-            </div>
-        </c:if>
+    <div class="row d-flex justify-content-center">
 
         <%-- CONTENT --%>
 
@@ -55,11 +55,11 @@ Class page corresponds to the '.page' element in included CSS document.
 
             <div class="form-group">
                 <label for="login"><fmt:message key="login_jsp.label.login"/></label>
-                <input id="login" name="login" class="form-control"/>
+                <input id="login" name="login" class="form-control" required/>
             </div>
             <div class="form-group">
                 <label for="password"><fmt:message key="login_jsp.label.password"/></label>
-                <input id="password" type="password" name="password" class="form-control"/>
+                <input id="password" type="password" name="password" class="form-control" required/>
             </div>
             <button type="submit" class="btn btn-primary"><fmt:message key="login_jsp.button.login"/></button>
         </form>
@@ -68,8 +68,9 @@ Class page corresponds to the '.page' element in included CSS document.
 
     </div>
 
-    <%@ include file="/WEB-INF/jspf/footer.jspf"%>
-
 </div>
+
+<%@ include file="/WEB-INF/jspf/footer.jspf"%>
+
 </body>
 </html>

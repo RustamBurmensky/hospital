@@ -28,8 +28,6 @@ Class page corresponds to the '.page' element in included CSS document.
 
     <div class="container">
 
-
-
     <h1>${title}</h1>
 
     <%--===========================================================================
@@ -118,8 +116,9 @@ Class page corresponds to the '.page' element in included CSS document.
 
     <a class="btn btn-outline-primary" href="controller?command=addEditAppointmentGet&patientId=${patient.id}"><fmt:message key="list_appointments_jsp.button.add"/></a>
 
-    <%@ include file="/WEB-INF/jspf/footer.jspf"%>
-
 </div>
+
+<%@ include file="/WEB-INF/jspf/footer.jspf"%>
+
 </body>
 </html>

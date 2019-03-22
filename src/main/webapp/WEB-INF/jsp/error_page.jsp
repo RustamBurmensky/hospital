@@ -5,7 +5,7 @@
 
 <html>
 
-<c:set var="title" value="Error" scope="page" />
+<fmt:message key="error_page_jsp.title" var="title"/>
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
 
 <body>
@@ -17,8 +17,8 @@
     <div class="container">
         <%-- CONTENT --%>
 
-        <div class="alert alert-danger" role="alert">
-            <h2>The following error occurred</h2>
+        <div class="alert alert-danger d-flex justify-content-center" role="alert">
+            <h2><fmt:message key="error_page_jsp.header"/></h2>
         </div>
 
         <%-- this way we get the error information (error 404)--%>
@@ -29,11 +29,11 @@
         <c:set var="exception" value="${requestScope['javax.servlet.error.exception']}"/>
 
         <c:if test="${not empty code}">
-            <h3>Error code: ${code}</h3>
+            <h1 class="display-3">Error code: ${code}</h1>
         </c:if>
 
         <c:if test="${not empty message}">
-            <h3>Message: ${message}</h3>
+            <h3>${message}</h3>
         </c:if>
 
         <%-- if get this page using forward --%>

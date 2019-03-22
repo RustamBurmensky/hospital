@@ -22,6 +22,8 @@ public class LocalizedPatientBean extends Patient {
         this.setBirthday(patient.getBirthday());
         this.setWeight(patient.getWeight());
         this.setHeight(patient.getHeight());
+        this.setAdmissionDate(patient.getAdmissionDate());
+        this.setInpatient(patient.isInpatient());
         this.setPatientDetails(patientDetails);
     }
 

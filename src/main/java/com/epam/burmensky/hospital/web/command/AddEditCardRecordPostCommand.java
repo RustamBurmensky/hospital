@@ -29,7 +29,7 @@ public class AddEditCardRecordPostCommand extends Command {
     private static final Logger log = Logger.getLogger(AddEditCardRecordPostCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request,
+    public CommandResult execute(HttpServletRequest request,
                           HttpServletResponse response) throws IOException, ServletException {
         log.debug("Add/Edit Card Record Command starts");
 
@@ -49,12 +49,8 @@ public class AddEditCardRecordPostCommand extends Command {
                 errorMessage = "Wrong card record identifier";
                 request.setAttribute("errorMessage", errorMessage);
                 log.error("errorMessage --> " + errorMessage);
-                return redirect;
+                return new ForwardCommandResult(redirect, request, response);
             }
-            log.trace("Card Record identifier found. Edit Card Record Command starts");
-        }
-        else {
-            log.trace("Card Record identifier is not found. Add Card Record Command starts");
         }
 
         String userIdString = request.getParameter("userId");
@@ -69,7 +65,7 @@ public class AddEditCardRecordPostCommand extends Command {
             errorMessage = "Wrong user identifier";
             request.setAttribute("errorMessage", errorMessage);
             log.error("errorMessage --> " + errorMessage);
-            return redirect;
+            return new ForwardCommandResult(redirect, request, response);
         }
 
         String patientIdString = request.getParameter("patientId");
@@ -84,7 +80,7 @@ public class AddEditCardRecordPostCommand extends Command {
             errorMessage = "Wrong patient identifier";
             request.setAttribute("errorMessage", errorMessage);
             log.error("errorMessage --> " + errorMessage);
-            return redirect;
+            return new ForwardCommandResult(redirect, request, response);
         }
 
         String recordTypeIdString = request.getParameter("recordTypeId");
@@ -100,7 +96,7 @@ public class AddEditCardRecordPostCommand extends Command {
             errorMessage = "Wrong record type identifier";
             request.setAttribute("errorMessage", errorMessage + ex);
             log.error("errorMessage --> " + errorMessage);
-            return redirect;
+            return new ForwardCommandResult(redirect, request, response);
         }
 
         String dateString = request.getParameter("date");
@@ -117,7 +113,7 @@ public class AddEditCardRecordPostCommand extends Command {
             errorMessage = "Wrong date format (date)";
             request.setAttribute("errorMessage", errorMessage);
             log.error("errorMessage --> " + errorMessage);
-            return redirect;
+            return new ForwardCommandResult(redirect, request, response);
         }
 
         Map<Language, String> localizedText = new HashMap<>();
@@ -154,6 +150,6 @@ public class AddEditCardRecordPostCommand extends Command {
         redirect = Path.COMMAND__LIST_CARD_RECORDS + bean.getPatientId();
 
         log.debug("Commands finished");
-        return redirect;
+        return new RedirectCommandResult(redirect, request, response);
     }
 }

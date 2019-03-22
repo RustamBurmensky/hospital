@@ -31,7 +31,7 @@ public class AddEditSpecializationGetCommand extends Command {
     private static final Logger log = Logger.getLogger(AddEditSpecializationGetCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request,
+    public CommandResult execute(HttpServletRequest request,
                           HttpServletResponse response) throws IOException, ServletException {
         HttpSession session = request.getSession();
 
@@ -64,6 +64,6 @@ public class AddEditSpecializationGetCommand extends Command {
         }
 
         log.debug("Commands finished");
-        return Path.PAGE__ADD_EDIT_SPECIALIZATION;
+        return new ForwardCommandResult(Path.PAGE__ADD_EDIT_SPECIALIZATION, request, response);
     }
 }

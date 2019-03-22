@@ -2,8 +2,10 @@ package com.epam.burmensky.hospital.db;
 
 import org.apache.log4j.Logger;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
@@ -13,21 +15,6 @@ import java.sql.SQLException;
  *
  */
 public class DBConnectionManager {
-
-    private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
-    private static final String URL = "jdbc:mysql://localhost:3306/hospital"+
-            "?verifyServerCertificate=false" +
-            "&useUnicode=true" +
-            "&useSSL=false" +
-            "&requireSSL=false" +
-            "&useGmtMillisForDatetimes=true" +
-            "&useJDBCCompliantTimezoneShift=true" +
-            "&useLegacyDatetimeCode=false" +
-            "&useTimezone=true" +
-            "&serverTimezone=UTC";
-
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "";
 
     private static final Logger logger = Logger.getLogger(DBConnectionManager.class);
 
@@ -56,10 +43,12 @@ public class DBConnectionManager {
     public Connection getConnection() throws SQLException {
         Connection con = null;
         try {
-            Class.forName(DRIVER).getDeclaredConstructor().newInstance();
-            con = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
-            con.setAutoCommit(false);
+            Context initContext = new InitialContext();
+            Context envContext  = (Context)initContext.lookup("java:/comp/env");
+
+            // db - the name of data source
+            DataSource ds = (DataSource)envContext.lookup("jdbc/db");
+            con = ds.getConnection();
         }
         catch (Exception ex) {
             logger.error("Cannot obtain a connection from the pool", ex);

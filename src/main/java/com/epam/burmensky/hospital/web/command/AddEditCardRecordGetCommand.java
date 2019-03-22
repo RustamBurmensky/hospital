@@ -33,7 +33,7 @@ public class AddEditCardRecordGetCommand extends Command {
     private static final Logger log = Logger.getLogger(AddEditCardRecordGetCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request,
+    public CommandResult execute(HttpServletRequest request,
                           HttpServletResponse response) throws IOException, ServletException {
 
         HttpSession session = request.getSession();
@@ -55,7 +55,7 @@ public class AddEditCardRecordGetCommand extends Command {
                 errorMessage = "Wrong patient identifier";
                 request.setAttribute("errorMessage", errorMessage);
                 log.error("errorMessage --> " + errorMessage);
-                return forward;
+                return new ForwardCommandResult(forward, request, response);
             }
 
             LocalizedHealthCardRecordBean recordBean = new LocalizedHealthCardRecordBean();
@@ -99,6 +99,6 @@ public class AddEditCardRecordGetCommand extends Command {
         log.trace("Set the request attribute: recordTypes --> " + recordTypes);
 
         log.debug("Commands finished");
-        return Path.PAGE__ADD_EDIT_CARD_RECORD;
+        return new ForwardCommandResult(Path.PAGE__ADD_EDIT_CARD_RECORD, request, response);
     }
 }
